@@ -72,7 +72,7 @@
   }
 
   .text-heading-lg {
-    @apply text-[28px] font-bold tracking-tight;
+    @apply text-[28px] font-bold;
   }
   .text-micro {
     @apply text-[10px] font-medium tracking-wide;
@@ -88,6 +88,31 @@
 
 /* ========================================== COMPONENT CLASSES */
 @layer components {
+  /* ---- Sign in / sign up ---- */
+  .auth-split {
+    @apply grid min-h-screen w-full lg:grid-cols-[1.05fr_1fr];
+  }
+
+  .auth-brand-panel {
+    @apply relative hidden flex-col justify-between gap-10 overflow-hidden border-r border-ink-400/40 p-12 lg:flex xl:p-16;
+    background:
+      radial-gradient(60% 50% at 15% 10%, rgb(var(--brand-500) / 0.3), transparent 70%),
+      radial-gradient(50% 40% at 90% 95%, rgb(var(--sun-500) / 0.16), transparent 70%),
+      linear-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.035) 1px, transparent 1px),
+      rgb(var(--ink-200));
+    background-size: auto, auto, 36px 36px, 36px 36px, auto;
+  }
+
+  .auth-form-panel {
+    @apply flex flex-col items-center justify-center gap-8 px-5 py-10;
+    background: radial-gradient(
+      45% 40% at 50% 0%,
+      rgb(var(--brand-500) / 0.1),
+      transparent 70%
+    );
+  }
+
   /* ---- Layout shells ---- */
   .app-header {
     @apply flex min-h-[84px] w-full min-w-full flex-nowrap items-center justify-between gap-3 border-b border-ink-300/70 bg-ink-100/80 px-6 backdrop-blur-md sm:px-8;
@@ -330,4 +355,52 @@
 
 .lb-elevation {
   background: rgb(var(--ink-300));
+}
+
+/* ========================================== CLERK OVERRIDES */
+/* Frosted-glass card for the sign-in / sign-up forms */
+.cl-cardBox {
+  background: rgb(var(--ink-200) / 0.8) !important;
+  border: 1px solid rgb(var(--ink-400) / 0.6) !important;
+  border-radius: 1.5rem !important;
+  box-shadow: 0 30px 70px -25px rgb(0 0 0 / 0.65) !important;
+  backdrop-filter: blur(16px);
+}
+
+.cl-card,
+.cl-footer {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.cl-socialButtonsBlockButton {
+  background: rgb(var(--ink-300)) !important;
+  border: 1px solid rgb(var(--ink-400)) !important;
+}
+
+.cl-socialButtonsBlockButton:hover {
+  background: rgb(var(--ink-350)) !important;
+}
+
+/* Profile button in the document header */
+.cl-avatarBox {
+  width: 38px;
+  height: 38px;
+}
+
+.cl-userButtonTrigger {
+  border-radius: 9999px;
+}
+
+.cl-userButtonTrigger:focus-visible {
+  box-shadow: 0 0 0 2px rgb(var(--brand-400) / 0.7) !important;
+}
+
+.cl-userButtonPopoverCard {
+  background: rgb(var(--ink-200)) !important;
+  border: 1px solid rgb(var(--ink-400) / 0.6) !important;
+}
+
+.cl-userButtonPopoverFooter {
+  background: transparent !important;
 }

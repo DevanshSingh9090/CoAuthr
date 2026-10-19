@@ -8,9 +8,13 @@ type LogoProps = {
 };
 
 /**
- * Coauthr brand logo, drawn as inline SVG.
+ * Coauthr brand logo.
  * Two overlapping circles = two co-authors writing together;
  * the amber dot is the shared moment where their work meets.
+ *
+ * The green tile is a normal element with a CSS gradient (not an SVG <defs>
+ * gradient), so several logos can sit on one page, even inside hidden
+ * containers, without borrowing each other's gradient by id.
  */
 const Logo = ({
   className = "",
@@ -19,32 +23,19 @@ const Logo = ({
 }: LogoProps) => {
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <svg
-        width="32"
-        height="32"
-        viewBox="0 0 32 32"
-        fill="none"
-        aria-hidden="true"
-        className="shrink-0"
-      >
-        <defs>
-          <linearGradient
-            id="coauthr-mark"
-            x1="4"
-            y1="2"
-            x2="28"
-            y2="30"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0" stopColor="#2DCB9B" />
-            <stop offset="1" stopColor="#0A7D5C" />
-          </linearGradient>
-        </defs>
-        <rect width="32" height="32" rx="10" fill="url(#coauthr-mark)" />
-        <circle cx="12.5" cy="16" r="6" stroke="#fff" strokeWidth="2" />
-        <circle cx="19.5" cy="16" r="6" stroke="#fff" strokeWidth="2" />
-        <circle cx="16" cy="16" r="2" fill="#F5B544" />
-      </svg>
+      <span className="gradient-brand flex size-8 shrink-0 items-center justify-center rounded-[10px]">
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle cx="12.5" cy="16" r="6" stroke="#fff" strokeWidth="2" />
+          <circle cx="19.5" cy="16" r="6" stroke="#fff" strokeWidth="2" />
+          <circle cx="16" cy="16" r="2" fill="#F5B544" />
+        </svg>
+      </span>
 
       {showText && (
         <span

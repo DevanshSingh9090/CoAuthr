@@ -1,3 +1,5 @@
+import { UserButton } from "@clerk/nextjs";
+
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -47,7 +49,10 @@ export default function ThemePreview() {
     <main className="home-shell">
       <div className="app-header sticky left-0 top-0 z-40">
         <Logo />
-        <span className="readonly-pill">Theme preview</span>
+        <div className="flex items-center gap-4">
+          <span className="readonly-pill">Theme preview</span>
+          <UserButton />
+        </div>
       </div>
 
       <div className="library">

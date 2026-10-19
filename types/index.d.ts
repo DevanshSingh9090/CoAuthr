@@ -95,3 +95,5 @@ declare type ThreadWrapperProps = {
     import("@liveblocks/client").BaseMetadata
   >;
 };
+
+declare module "*.css";
