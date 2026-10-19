@@ -1,33 +1,333 @@
+/* Third-party styles must be imported BEFORE the Tailwind layers */
+@import "@liveblocks/react-ui/styles.css";
+@import "@liveblocks/react-lexical/styles.css";
+@import "../styles/editor.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
+/* ========================================== BASE: palette + page defaults */
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    /* RGB channels, consumed by tailwind.config.ts and by the overrides below.
+       Change a colour here and the whole app follows. */
+    --ink-100: 11 18 16; /* #0B1210  page background */
+    --ink-200: 16 26 23; /* #101A17  cards, panels */
+    --ink-300: 22 35 31; /* #16231F  raised surfaces */
+    --ink-350: 27 44 39; /* #1B2C27  floating bars */
+    --ink-400: 36 56 47; /* #24382F  borders, inputs */
+    --ink-500: 47 74 64; /* #2F4A40  strong borders, scrollbars */
+
+    --brand-100: 183 217 204; /* #B7D9CC  muted mint, secondary text */
+    --brand-400: 45 203 155; /* #2DCB9B */
+    --brand-500: 20 184 138; /* #14B88A  primary emerald */
+    --brand-600: 14 156 116; /* #0E9C74 */
+    --brand-700: 10 125 92; /* #0A7D5C */
+
+    --sun-400: 248 194 101; /* #F8C265  amber */
+    --sun-500: 245 181 68; /* #F5B544 */
+
+    --danger-400: 242 109 125; /* #F26D7D  rose */
+    --danger-500: 229 84 106; /* #E5546A */
+
+    color-scheme: dark;
+  }
+
+  html {
+    background: rgb(var(--ink-100));
+  }
+
+  body {
+    @apply bg-ink-100 text-white;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: rgb(var(--brand-500) / 0.35);
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
+/* ========================================== UTILITIES */
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .slim-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--ink-500)) transparent;
   }
+  .slim-scroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .slim-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .slim-scroll::-webkit-scrollbar-thumb {
+    background: rgb(var(--ink-500));
+    border-radius: 999px;
+  }
+  .slim-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--brand-600));
+  }
+
+  .text-heading-lg {
+    @apply text-[28px] font-bold tracking-tight;
+  }
+  .text-micro {
+    @apply text-[10px] font-medium tracking-wide;
+  }
+
+  .gradient-brand {
+    @apply bg-gradient-to-br from-brand-500 to-brand-700;
+  }
+  .gradient-danger {
+    @apply bg-gradient-to-br from-danger-400 to-danger-500;
+  }
+}
+
+/* ========================================== COMPONENT CLASSES */
+@layer components {
+  /* ---- Layout shells ---- */
+  .app-header {
+    @apply flex min-h-[84px] w-full min-w-full flex-nowrap items-center justify-between gap-3 border-b border-ink-300/70 bg-ink-100/80 px-6 backdrop-blur-md sm:px-8;
+  }
+
+  .home-shell {
+    @apply relative flex min-h-screen w-full flex-col items-center gap-6 sm:gap-10;
+  }
+
+  .room-shell {
+    @apply flex size-full max-h-screen flex-1 flex-col items-center overflow-hidden;
+  }
+
+  .page-loader {
+    @apply flex size-full h-screen items-center justify-center gap-3 text-brand-100;
+  }
+
+  /* ---- Dashboard (document library) ---- */
+  .library {
+    @apply mb-12 flex w-full max-w-[1100px] flex-col items-stretch gap-8 px-5;
+  }
+
+  .library-head {
+    @apply flex w-full items-end justify-between;
+  }
+
+  .doc-grid {
+    @apply grid w-full grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .doc-card {
+    @apply relative flex flex-col overflow-hidden rounded-2xl border border-ink-400/50 bg-surface shadow-lg shadow-black/30 transition duration-200 hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-xl;
+  }
+
+  /* A little "page with text lines" strip at the top of every document card */
+  .doc-card-preview {
+    height: 88px;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0 12px,
+        rgb(var(--ink-500) / 0.55) 12px 14px
+      ),
+      linear-gradient(135deg, rgb(var(--brand-600) / 0.28), rgb(var(--ink-300)));
+    background-size:
+      calc(100% - 40px) 64px,
+      100% 100%;
+    background-repeat: no-repeat;
+    background-position:
+      20px 16px,
+      0 0;
+  }
+
+  .library-empty {
+    @apply flex w-full max-w-[560px] flex-col items-center justify-center gap-6 rounded-3xl border border-dashed border-ink-500 bg-surface px-10 py-14 text-center shadow-md;
+  }
+
+  /* ---- Document header ---- */
+  .title-input {
+    @apply min-w-[78px] flex-1 border-none bg-transparent px-0 text-left text-base font-semibold leading-[24px] text-white focus-visible:ring-0 focus-visible:ring-offset-0 disabled:text-ink-500 sm:text-xl md:text-center !important;
+  }
+
+  .title-text {
+    @apply line-clamp-1 text-base font-semibold leading-[24px] sm:pl-0 sm:text-xl;
+  }
+
+  .readonly-pill {
+    @apply rounded-full bg-sun-500/15 px-3 py-0.5 text-xs font-medium text-sun-400 ring-1 ring-sun-500/30;
+  }
+
+  .presence-stack {
+    @apply hidden items-center justify-end -space-x-3 overflow-hidden sm:flex;
+  }
+
+  /* ---- Editor chrome ---- */
+  .toolbar-strip {
+    @apply slim-scroll z-50 w-screen overflow-auto border-b border-ink-300 bg-ink-100/90 pl-3 pr-4 backdrop-blur;
+  }
+
+  .writing-area {
+    @apply slim-scroll h-[calc(100vh-140px)] gap-5 overflow-auto px-5 pt-5 lg:flex-row lg:items-start lg:justify-center xl:gap-10 xl:pt-10;
+  }
+
+  .selection-bar {
+    @apply flex w-full min-w-max items-center justify-center gap-1 rounded-full bg-ink-350 p-1.5 shadow-xl ring-1 ring-brand-500/30;
+  }
+
+  .selection-bar-btn {
+    @apply relative inline-flex size-9 items-center justify-center whitespace-nowrap rounded-full text-sm font-medium transition-colors hover:bg-ink-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  /* ---- Comments ---- */
+  .comment-rail {
+    @apply mb-10 flex w-full flex-col items-center justify-center space-y-4 lg:w-fit;
+  }
+
+  .comment-box {
+    @apply w-full max-w-[800px] rounded-2xl border border-ink-400/60 bg-ink-200 shadow-md lg:w-[350px];
+  }
+
+  .comment-card {
+    @apply w-full max-w-[800px] rounded-2xl border border-ink-400/60 bg-ink-200 shadow-md transition-all lg:w-[350px];
+  }
+
+  /* ---- Sharing ---- */
+  .invite-input {
+    @apply h-11 flex-1 border-none bg-ink-400 text-white focus-visible:ring-0 focus-visible:ring-offset-0 !important;
+  }
+
+  .remove-link {
+    @apply rounded-lg bg-transparent px-0 text-danger-400 hover:bg-transparent hover:text-danger-500;
+  }
+
+  /* ---- Dialogs, selects, popovers ---- */
+  .dialog-card {
+    @apply w-full max-w-[420px] rounded-3xl border border-ink-400/60 bg-surface px-6 py-7 shadow-2xl shadow-black/50 sm:min-w-[500px] !important;
+  }
+
+  .dialog-card button {
+    @apply focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400/50 focus-visible:ring-offset-0 !important;
+  }
+
+  .role-select {
+    @apply w-fit border-none bg-transparent text-brand-100 !important;
+  }
+
+  .role-select svg {
+    @apply ml-1 mt-1;
+  }
+
+  .role-option {
+    @apply cursor-pointer bg-ink-200 text-brand-100 hover:bg-ink-300 focus:bg-ink-300 focus:text-white !important;
+  }
+
+  .popover-panel {
+    @apply w-[460px] max-w-[92vw] rounded-2xl border border-ink-400/60 bg-ink-200 shadow-xl shadow-black/40 !important;
+  }
+}
+
+/* ========================================== LIVEBLOCKS OVERRIDES */
+.lb-root {
+  --lb-accent: rgb(var(--brand-500));
+  --lb-accent-subtle: rgb(var(--ink-200));
+  --lb-radius: 12px;
+  --lb-dynamic-background: rgb(var(--ink-350));
+}
+
+.lb-root:where(:not(.lb-root .lb-root)) {
+  --lb-dynamic-background: rgb(var(--ink-350));
+  color: #fff;
+}
+
+.lb-comment,
+.lb-thread-comments,
+.lb-composer,
+.lb-comment-reaction {
+  background-color: rgb(var(--ink-300));
+  color: #fff;
+}
+
+.lb-button {
+  --lb-foreground-moderate: #fff;
+}
+
+.lb-button:where([data-variant="primary"]) {
+  background-color: rgb(var(--brand-600));
+  color: #fff;
+  padding: 8px;
+}
+
+.lb-button:where(
+    [data-variant="default"]:not(
+        :is(
+            :enabled:hover,
+            :enabled:focus-visible,
+            [aria-expanded="true"],
+            [aria-selected="true"]
+          )
+      )
+  ) {
+  color: rgb(var(--brand-100));
+}
+
+.lb-button:where(
+    :enabled:hover,
+    :enabled:focus-visible,
+    [aria-expanded="true"],
+    [aria-selected="true"]
+  ) {
+  --lb-button-background: rgb(var(--ink-350));
+  color: rgb(var(--brand-100));
+}
+
+.lb-inbox-notification-list-item:where(:not(:last-of-type)) {
+  border-bottom: none;
+}
+
+.lb-comment-body,
+.lb-dropdown-item,
+.lb-dropdown-item-icon,
+.lb-composer-editor {
+  color: #fff;
+}
+
+.lb-composer-action {
+  padding: 8px;
+}
+
+.lb-comment-content {
+  background: rgb(var(--ink-200));
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.lb-comment-date,
+.lb-lexical-mention-suggestion-user,
+.lb-composer-suggestions-list-item,
+.lb-inbox-notification-date,
+.lb-comment-author,
+.lb-emoji-picker-search-icon,
+.lb-emoji-picker-category-header-title,
+.lb-emoji-picker-search::placeholder {
+  color: rgb(var(--brand-100));
+}
+
+.data-liveblocks-portal {
+  color: rgb(var(--brand-100)) !important;
+}
+
+.lb-composer-editor :where([data-placeholder]) {
+  color: rgb(var(--brand-100));
+  font-size: 14px;
+}
+
+.lb-lexical-floating-threads-thread:where([data-resolved]) {
+  opacity: 40%;
+}
+
+.lb-elevation {
+  background: rgb(var(--ink-300));
 }

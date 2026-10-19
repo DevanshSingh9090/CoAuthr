@@ -1,0 +1,256 @@
+/* ======================== Lexical editor styles (Coauthr theme) ========================
+   Class names match the keys of components/editor/plugins/Theme.ts (added in Commit 13).
+   Colours come from the CSS variables declared in app/globals.css.
+*/
+
+.ltr {
+  text-align: left;
+}
+
+.rtl {
+  text-align: right;
+}
+
+/* ---- Page surface ---- */
+.editor-container {
+  color: #000;
+  line-height: 22px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.editor-inner {
+  position: relative;
+  background: rgb(var(--ink-200));
+  border: 1px solid rgb(var(--ink-400) / 0.5);
+}
+
+.editor-input {
+  min-height: 400px;
+  resize: none;
+  position: relative;
+  outline: 0;
+  tab-size: 1;
+  padding: 48px;
+  font-size: 16px;
+  color: #e8f3ee;
+  caret-color: rgb(var(--brand-400));
+}
+
+.editor-placeholder {
+  position: absolute;
+  top: 48px;
+  left: 48px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  color: rgb(var(--brand-100) / 0.6);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ---- Text formats ---- */
+.editor-text-bold {
+  font-weight: 700;
+}
+
+.editor-text-italic {
+  font-style: italic;
+}
+
+.editor-text-underline {
+  text-decoration: underline;
+}
+
+.editor-text-strikethrough {
+  text-decoration: line-through;
+}
+
+.editor-text-underlineStrikethrough {
+  text-decoration: underline line-through;
+}
+
+.editor-text-code {
+  background-color: rgb(var(--ink-400));
+  padding: 1px 0.3rem;
+  border-radius: 4px;
+  font-family: Menlo, Consolas, Monaco, monospace;
+  font-size: 92%;
+}
+
+.editor-link {
+  color: rgb(var(--brand-400));
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---- Blocks ---- */
+.editor-paragraph {
+  position: relative;
+  margin: 0 0 10px;
+}
+
+.editor-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.editor-heading-h1 {
+  margin: 0 0 14px;
+  padding: 0;
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.editor-heading-h2 {
+  margin: 0 0 10px;
+  padding: 0;
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.editor-heading-h3 {
+  margin: 0 0 8px;
+  padding: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.editor-quote {
+  margin: 0 0 10px 12px;
+  padding-left: 16px;
+  font-size: 16px;
+  color: rgb(var(--brand-100));
+  border-left: 4px solid rgb(var(--sun-500));
+}
+
+.editor-code {
+  display: block;
+  margin: 8px 0;
+  padding: 10px 12px;
+  overflow-x: auto;
+  background-color: rgb(var(--ink-300));
+  font-family: Menlo, Consolas, Monaco, monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  tab-size: 2;
+}
+
+.editor-list-ol,
+.editor-list-ul {
+  margin: 0 0 0 16px;
+  padding: 0;
+}
+
+.editor-listitem {
+  margin: 8px 32px;
+}
+
+.editor-nested-listitem {
+  list-style-type: none;
+}
+
+/* ======================== Top formatting bar ======================== */
+.format-bar {
+  display: flex;
+  align-items: center;
+  padding: 6px 4px;
+  background: transparent;
+}
+
+.format-bar button.format-btn {
+  display: flex;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.format-bar button.format-btn:disabled {
+  cursor: not-allowed;
+}
+
+.format-bar button.format-btn.spaced {
+  margin-right: 2px;
+}
+
+.format-bar button.format-btn:hover:not([disabled]) {
+  background-color: rgb(var(--ink-300));
+}
+
+.format-bar button.format-btn.active {
+  background-color: rgb(var(--brand-500) / 0.22);
+}
+
+.format-bar .fmt-icon {
+  display: flex;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.6;
+  filter: invert(1); /* source SVGs are black; flip to white on the dark bar */
+}
+
+.format-bar button.format-btn:disabled .fmt-icon {
+  opacity: 0.2;
+}
+
+.format-bar button.format-btn.active .fmt-icon {
+  opacity: 1;
+}
+
+.format-bar .format-divider {
+  width: 1px;
+  align-self: stretch;
+  margin: 6px 6px;
+  background-color: rgb(var(--ink-400));
+}
+
+/* Icon images for each toolbar button */
+.fmt-icon.undo {
+  background-image: url(/assets/icons/arrow-counterclockwise.svg);
+}
+.fmt-icon.redo {
+  background-image: url(/assets/icons/arrow-clockwise.svg);
+}
+.fmt-icon.bold {
+  background-image: url(/assets/icons/type-bold.svg);
+}
+.fmt-icon.italic {
+  background-image: url(/assets/icons/type-italic.svg);
+}
+.fmt-icon.underline {
+  background-image: url(/assets/icons/type-underline.svg);
+}
+.fmt-icon.strikethrough {
+  background-image: url(/assets/icons/type-strikethrough.svg);
+}
+.fmt-icon.left-align {
+  background-image: url(/assets/icons/text-left.svg);
+}
+.fmt-icon.center-align {
+  background-image: url(/assets/icons/text-center.svg);
+}
+.fmt-icon.right-align {
+  background-image: url(/assets/icons/text-right.svg);
+}
+.fmt-icon.justify-align {
+  background-image: url(/assets/icons/justify.svg);
+}
+.fmt-icon.h1 {
+  background-image: url(/assets/icons/h1.svg);
+}
+.fmt-icon.h2 {
+  background-image: url(/assets/icons/h2.svg);
+}
+.fmt-icon.h3 {
+  background-image: url(/assets/icons/h3.svg);
+}
